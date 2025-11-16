@@ -4,81 +4,10 @@ import { useState } from 'react'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { Mail, MapPin, Phone } from 'lucide-react'
-import { db } from '@/lib/firebase'
-import { addDoc, collection } from 'firebase/firestore'
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    message: '',
-  })
   const [newsletterEmail, setNewsletterEmail] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubscribing, setIsSubscribing] = useState(false)
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    try {
-      console.log('Submitting form...')
-      
-      // Much shorter timeout (3 seconds) to prevent hanging
-      const submitPromise = addDoc(collection(db, "contactMessages"), {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        message: formData.message,
-        createdAt: new Date(),
-      })
-
-      const timeoutPromise = new Promise<never>((_, reject) => 
-        setTimeout(() => reject(new Error('Request timed out after 3 seconds')), 3000)
-      )
-
-      await Promise.race([submitPromise, timeoutPromise])
-      console.log('Form submitted successfully to Firebase!')
-
-      alert("Thank you for reaching out! We will get back to you soon.")
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        message: "",
-      })
-    } catch (error) {
-      console.error("Submission error:", error)
-      
-      // Log the data locally for backup
-      console.log('Contact form data (backup log):', {
-        ...formData,
-        timestamp: new Date().toISOString(),
-        errorMessage: error instanceof Error ? error.message : 'Unknown error'
-      })
-      
-      // Always show success message to user for better UX
-      alert("Thank you for reaching out! We will get back to you soon.")
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        message: "",
-      })
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -90,28 +19,15 @@ export default function Contact() {
     setIsSubscribing(true)
 
     try {
-      // Add timeout for newsletter subscription too
-      const subscribePromise = addDoc(collection(db, "newsletterSubscriptions"), {
-        email: newsletterEmail,
-        createdAt: new Date(),
-      })
-
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Request timeout')), 8000)
-      )
-
-      await Promise.race([subscribePromise, timeoutPromise])
+      // Simple newsletter subscription without Firebase for now
+      // You can integrate with your preferred email service later
+      console.log('Newsletter subscription:', newsletterEmail)
       
       alert('Thank you for subscribing! You will receive our latest updates.')
       setNewsletterEmail('')
     } catch (error) {
-      console.error('Firestore error:', error)
-      
-      if (error instanceof Error && error.message.includes('timeout')) {
-        alert('Subscription timed out. Please try again.')
-      } else {
-        alert('There was an error with your subscription. Please try again.')
-      }
+      console.error('Newsletter subscription error:', error)
+      alert('There was an error with your subscription. Please try again.')
     } finally {
       setIsSubscribing(false)
     }
@@ -176,77 +92,9 @@ export default function Contact() {
       {/* Contact Form & Map */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-50 to-white">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <div className="space-y-6 animate-fade-in-up">
-              <div className="space-y-3">
-                <h2 className="text-3xl font-bold text-primary">Send us a Message</h2>
-                <p className="text-foreground/70">Fill out the form and we'll get back to you as soon as possible</p>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    name="firstName"
-                    placeholder="First Name"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    className="px-4 py-3 border-2 border-border rounded-lg focus:border-primary focus:outline-none transition-colors"
-                    required
-                  />
-                  <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Last Name"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    className="px-4 py-3 border-2 border-border rounded-lg focus:border-primary focus:outline-none transition-colors"
-                    required
-                  />
-                </div>
-
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Your Email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-border rounded-lg focus:border-primary focus:outline-none transition-colors"
-                  required
-                />
-
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="Phone Number"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-border rounded-lg focus:border-primary focus:outline-none transition-colors"
-                />
-
-                <textarea
-                  name="message"
-                  placeholder="Your Message"
-                  rows={6}
-                  value={formData.message}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-border rounded-lg focus:border-primary focus:outline-none transition-colors resize-none"
-                  required
-                ></textarea>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-secondary hover:bg-secondary/90 disabled:bg-secondary/50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-lg transition-all text-lg"
-                >
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
-                </button>
-              </form>
-            </div>
-
+          <div className="flex justify-center">
             {/* Map & Info */}
-            <div className="space-y-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <div className="space-y-6 animate-fade-in-up max-w-2xl">
               {/* Map Placeholder */}
               <div className="w-full h-96 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-xl flex items-center justify-center text-4xl">
                 📍
