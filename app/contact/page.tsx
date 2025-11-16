@@ -96,9 +96,19 @@ export default function Contact() {
             {/* Map & Info */}
             <div className="space-y-6 animate-fade-in-up max-w-2xl">
               {/* Map Placeholder */}
-              <div className="w-full h-96 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-xl flex items-center justify-center text-4xl">
-                📍
-              </div>
+              <a 
+                href="https://maps.app.goo.gl/GcQcVq5Q7odNWgS78" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="block w-full h-96 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-xl hover:from-primary/30 hover:to-secondary/30 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer group"
+              >
+                <div className="w-full h-full flex flex-col items-center justify-center text-4xl">
+                  <div className="group-hover:scale-110 transition-transform duration-300">📍</div>
+                  <p className="text-lg font-semibold text-primary mt-4 opacity-70 group-hover:opacity-100 transition-opacity">
+                    Click to view on Google Maps
+                  </p>
+                </div>
+              </a>
 
               {/* Helpful Links */}
               <div className="glass p-8 space-y-6">
