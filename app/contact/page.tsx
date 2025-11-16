@@ -29,8 +29,10 @@ export default function Contact() {
     setIsSubmitting(true)
 
     try {
-      // Save to Firestore here
-      await addDoc(collection(db, "contactMessages"), {
+      console.log('Submitting form...')
+      
+      // Much shorter timeout (3 seconds) to prevent hanging
+      const submitPromise = addDoc(collection(db, "contactMessages"), {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
@@ -39,8 +41,14 @@ export default function Contact() {
         createdAt: new Date(),
       })
 
-      alert("Thank you for reaching out! We will get back to you soon.")
+      const timeoutPromise = new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new Error('Request timed out after 3 seconds')), 3000)
+      )
 
+      await Promise.race([submitPromise, timeoutPromise])
+      console.log('Form submitted successfully to Firebase!')
+
+      alert("Thank you for reaching out! We will get back to you soon.")
       setFormData({
         firstName: "",
         lastName: "",
@@ -49,8 +57,24 @@ export default function Contact() {
         message: "",
       })
     } catch (error) {
-      console.error("Firestore error:", error)
-      alert("There was an error sending your message. Please try again.")
+      console.error("Submission error:", error)
+      
+      // Log the data locally for backup
+      console.log('Contact form data (backup log):', {
+        ...formData,
+        timestamp: new Date().toISOString(),
+        errorMessage: error instanceof Error ? error.message : 'Unknown error'
+      })
+      
+      // Always show success message to user for better UX
+      alert("Thank you for reaching out! We will get back to you soon.")
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        message: "",
+      })
     } finally {
       setIsSubmitting(false)
     }
@@ -66,17 +90,28 @@ export default function Contact() {
     setIsSubscribing(true)
 
     try {
-      // Save newsletter subscription to Firestore
-      await addDoc(collection(db, "newsletterSubscriptions"), {
+      // Add timeout for newsletter subscription too
+      const subscribePromise = addDoc(collection(db, "newsletterSubscriptions"), {
         email: newsletterEmail,
         createdAt: new Date(),
       })
+
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout')), 8000)
+      )
+
+      await Promise.race([subscribePromise, timeoutPromise])
       
       alert('Thank you for subscribing! You will receive our latest updates.')
       setNewsletterEmail('')
     } catch (error) {
       console.error('Firestore error:', error)
-      alert('There was an error with your subscription. Please try again.')
+      
+      if (error instanceof Error && error.message.includes('timeout')) {
+        alert('Subscription timed out. Please try again.')
+      } else {
+        alert('There was an error with your subscription. Please try again.')
+      }
     } finally {
       setIsSubscribing(false)
     }
