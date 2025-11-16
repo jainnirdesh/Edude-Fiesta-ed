@@ -95,20 +95,32 @@ export default function Contact() {
           <div className="flex justify-center">
             {/* Map & Info */}
             <div className="space-y-6 animate-fade-in-up max-w-2xl">
-              {/* Map Placeholder */}
-              <a 
-                href="https://maps.app.goo.gl/GcQcVq5Q7odNWgS78" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="block w-full h-96 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-xl hover:from-primary/30 hover:to-secondary/30 transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer group"
-              >
-                <div className="w-full h-full flex flex-col items-center justify-center text-4xl">
-                  <div className="group-hover:scale-110 transition-transform duration-300">📍</div>
-                  <p className="text-lg font-semibold text-primary mt-4 opacity-70 group-hover:opacity-100 transition-opacity">
-                    Click to view on Google Maps
-                  </p>
-                </div>
-              </a>
+              {/* Google Maps Embed */}
+              <div className="w-full h-96 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <iframe
+                  src="https://maps.google.com/maps?width=100%25&height=600&hl=en&q=K.R.%20Mangalam%20University%20Gurugram&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen={true}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="K.R. Mangalam University Location"
+                ></iframe>
+              </div>
+              
+              {/* Click to open in Google Maps */}
+              <div className="text-center">
+                <a 
+                  href="https://maps.app.goo.gl/GcQcVq5Q7odNWgS78" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors duration-300 font-semibold"
+                >
+                  <span>📍</span>
+                  Open in Google Maps
+                </a>
+              </div>
 
               {/* Helpful Links */}
               <div className="glass p-8 space-y-6">
