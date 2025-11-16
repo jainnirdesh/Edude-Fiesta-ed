@@ -29,13 +29,18 @@ export default function Contact() {
     setIsSubmitting(true)
 
     try {
+      // Validate required fields
+      if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.email.trim() || !formData.message.trim()) {
+        throw new Error('Please fill in all required fields')
+      }
+
       // Save contact form data to Firebase Firestore
       const docRef = await addDoc(collection(db, 'contacts'), {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        message: formData.message,
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        message: formData.message.trim(),
         timestamp: serverTimestamp(),
         status: 'new' // for admin to track which messages have been handled
       })
@@ -45,7 +50,13 @@ export default function Contact() {
       setFormData({ firstName: '', lastName: '', email: '', phone: '', message: '' })
     } catch (error) {
       console.error('Error adding document: ', error)
-      alert('There was an error sending your message. Please try again.')
+      
+      // More detailed error messaging
+      if (error instanceof Error) {
+        alert(`Error: ${error.message}`)
+      } else {
+        alert('There was an error sending your message. Please try again. Check the browser console for more details.')
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -53,7 +64,10 @@ export default function Contact() {
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newsletterEmail.trim()) return
+    if (!newsletterEmail.trim()) {
+      alert('Please enter a valid email address')
+      return
+    }
 
     setIsSubscribing(true)
 
@@ -70,7 +84,13 @@ export default function Contact() {
       setNewsletterEmail('')
     } catch (error) {
       console.error('Error saving newsletter subscription: ', error)
-      alert('There was an error with your subscription. Please try again.')
+      
+      // More detailed error messaging
+      if (error instanceof Error) {
+        alert(`Error: ${error.message}`)
+      } else {
+        alert('There was an error with your subscription. Please try again. Check the browser console for more details.')
+      }
     } finally {
       setIsSubscribing(false)
     }
