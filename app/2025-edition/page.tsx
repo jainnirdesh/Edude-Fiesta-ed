@@ -170,11 +170,11 @@ export default function Edition2025() {
               { label: 'Performers', desc: 'Showcase your talent' },
               { label: 'Volunteers', desc: 'Help us organize' },
             ].map((item, idx) => (
-              <Link key={idx} href="/registration">
-                <Button size="lg" className="w-full bg-white text-primary hover:bg-white/90 font-semibold h-12">
+              <Button key={idx} size="lg" className="w-full bg-white text-primary hover:bg-white/90 font-semibold h-12" asChild>
+                <Link href="/registration">
                   Register as {item.label}
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             ))}
           </div>
         </div>
