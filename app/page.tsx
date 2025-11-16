@@ -14,10 +14,13 @@ export default function Home() {
     minutes: 0,
     seconds: 0,
   })
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+    
     const calculateCountdown = () => {
-      const eventDate = new Date('2026-02-25').getTime()
+      const eventDate = new Date('2026-02-25T00:00:00').getTime()
       const now = new Date().getTime()
       const distance = eventDate - now
 
@@ -27,6 +30,14 @@ export default function Home() {
           hours: Math.floor((distance / (1000 * 60 * 60)) % 24),
           minutes: Math.floor((distance / 1000 / 60) % 60),
           seconds: Math.floor((distance / 1000) % 60),
+        })
+      } else {
+        // Event has started
+        setCountdownTime({
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
         })
       }
     }
@@ -126,7 +137,9 @@ export default function Home() {
               { value: countdownTime.seconds, label: 'Seconds' },
             ].map((item, idx) => (
               <div key={idx} className="glass space-y-2 py-8">
-                <div className="text-4xl sm:text-5xl font-bold">{String(item.value).padStart(2, '0')}</div>
+                <div className="text-4xl sm:text-5xl font-bold">
+                  {mounted ? String(item.value).padStart(2, '0') : '00'}
+                </div>
                 <div className="text-white/70 text-sm sm:text-base uppercase tracking-widest">{item.label}</div>
               </div>
             ))}
