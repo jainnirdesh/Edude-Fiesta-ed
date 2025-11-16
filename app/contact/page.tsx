@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { Mail, MapPin, Phone } from 'lucide-react'
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -13,17 +15,65 @@ export default function Contact() {
     phone: '',
     message: '',
   })
+  const [newsletterEmail, setNewsletterEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubscribing, setIsSubscribing] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
-    alert('Thank you for reaching out! We will get back to you soon.')
-    setFormData({ firstName: '', lastName: '', email: '', phone: '', message: '' })
+    setIsSubmitting(true)
+
+    try {
+      // Save contact form data to Firebase Firestore
+      const docRef = await addDoc(collection(db, 'contacts'), {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message,
+        timestamp: serverTimestamp(),
+        status: 'new' // for admin to track which messages have been handled
+      })
+
+      console.log('Document written with ID: ', docRef.id)
+      alert('Thank you for reaching out! We will get back to you soon.')
+      setFormData({ firstName: '', lastName: '', email: '', phone: '', message: '' })
+    } catch (error) {
+      console.error('Error adding document: ', error)
+      alert('There was an error sending your message. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newsletterEmail.trim()) return
+
+    setIsSubscribing(true)
+
+    try {
+      // Save newsletter subscription to Firebase Firestore
+      const docRef = await addDoc(collection(db, 'newsletter_subscriptions'), {
+        email: newsletterEmail.trim(),
+        timestamp: serverTimestamp(),
+        status: 'active'
+      })
+
+      console.log('Newsletter subscription saved with ID: ', docRef.id)
+      alert('Thank you for subscribing! You will receive our latest updates.')
+      setNewsletterEmail('')
+    } catch (error) {
+      console.error('Error saving newsletter subscription: ', error)
+      alert('There was an error with your subscription. Please try again.')
+    } finally {
+      setIsSubscribing(false)
+    }
   }
 
   return (
@@ -146,9 +196,10 @@ export default function Contact() {
 
                 <button
                   type="submit"
-                  className="w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-3 rounded-lg transition-all text-lg"
+                  disabled={isSubmitting}
+                  className="w-full bg-secondary hover:bg-secondary/90 disabled:bg-secondary/50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-lg transition-all text-lg"
                 >
-                  Send Message
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
                 </button>
               </form>
             </div>
@@ -200,14 +251,23 @@ export default function Contact() {
             <p className="text-lg text-white/80">Subscribe to our newsletter for latest updates and announcements</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-3 rounded-lg text-foreground focus:outline-none"
-            />
-            <button className="bg-white text-primary hover:bg-white/90 font-semibold px-6 py-3 rounded-lg transition-all">
-              Subscribe
-            </button>
+            <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 w-full">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+                className="flex-1 px-4 py-3 rounded-lg text-foreground focus:outline-none"
+                required
+              />
+              <button 
+                type="submit"
+                disabled={isSubscribing}
+                className="bg-white text-primary hover:bg-white/90 disabled:bg-white/50 disabled:cursor-not-allowed font-semibold px-6 py-3 rounded-lg transition-all"
+              >
+                {isSubscribing ? 'Subscribing...' : 'Subscribe'}
+              </button>
+            </form>
           </div>
         </div>
       </section>
