@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { Mail, MapPin, Phone } from 'lucide-react'
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -27,17 +29,34 @@ export default function Contact() {
     setIsSubmitting(true)
 
     try {
-      // Simulate API call - replace this with your preferred backend
-      console.log('Form submission:', formData)
-      
-      // For now, just log the data and show success
-      await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate network delay
-      
+      // Validate required fields
+      if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.email.trim() || !formData.message.trim()) {
+        throw new Error('Please fill in all required fields')
+      }
+
+      // Save contact form data to Firebase Firestore
+      const docRef = await addDoc(collection(db, 'contacts'), {
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        message: formData.message.trim(),
+        timestamp: serverTimestamp(),
+        status: 'new' // for admin to track which messages have been handled
+      })
+
+      console.log('Document written with ID: ', docRef.id)
       alert('Thank you for reaching out! We will get back to you soon.')
       setFormData({ firstName: '', lastName: '', email: '', phone: '', message: '' })
     } catch (error) {
-      console.error('Error submitting form:', error)
-      alert('There was an error sending your message. Please try again.')
+      console.error('Error adding document: ', error)
+      
+      // More detailed error messaging
+      if (error instanceof Error) {
+        alert(`Error: ${error.message}`)
+      } else {
+        alert('There was an error sending your message. Please try again. Check the browser console for more details.')
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -53,16 +72,25 @@ export default function Contact() {
     setIsSubscribing(true)
 
     try {
-      // Simulate API call
-      console.log('Newsletter subscription:', newsletterEmail)
-      
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
+      // Save newsletter subscription to Firebase Firestore
+      const docRef = await addDoc(collection(db, 'newsletter_subscriptions'), {
+        email: newsletterEmail.trim(),
+        timestamp: serverTimestamp(),
+        status: 'active'
+      })
+
+      console.log('Newsletter subscription saved with ID: ', docRef.id)
       alert('Thank you for subscribing! You will receive our latest updates.')
       setNewsletterEmail('')
     } catch (error) {
-      console.error('Error subscribing to newsletter:', error)
-      alert('There was an error with your subscription. Please try again.')
+      console.error('Error saving newsletter subscription: ', error)
+      
+      // More detailed error messaging
+      if (error instanceof Error) {
+        alert(`Error: ${error.message}`)
+      } else {
+        alert('There was an error with your subscription. Please try again. Check the browser console for more details.')
+      }
     } finally {
       setIsSubscribing(false)
     }
