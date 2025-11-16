@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 
@@ -123,21 +124,21 @@ export default function Artists() {
             {[
               {
                 day: 'Day 1',
-                date: 'March 15, 2025',
+                date: 'February 25, 2026',
                 artist: 'Opening Acts',
                 time: 'Throughout the day',
                 desc: 'Cultural performances and state showcases'
               },
               {
                 day: 'Day 2',
-                date: 'March 16, 2025',
+                date: 'February 26, 2026',
                 artist: 'EDM DJ Night',
                 time: '7:00 PM - 10:00 PM',
                 desc: 'High-energy electronic music performances'
               },
               {
                 day: 'Day 3',
-                date: 'March 17, 2025',
+                date: 'February 27, 2026',
                 artist: 'Closing Performance',
                 time: '7:00 PM onwards',
                 desc: 'Grand finale with special artist'
@@ -166,9 +167,11 @@ export default function Artists() {
             <h2 className="text-4xl sm:text-5xl font-bold">Don't Miss Out</h2>
             <p className="text-lg text-white/80">Secure your spot for these incredible performances</p>
           </div>
-          <button className="bg-white text-primary hover:bg-white/90 font-semibold py-3 px-8 rounded-lg text-lg transition-all">
-            Register Now
-          </button>
+          <Link href="/registration">
+            <button className="bg-white text-primary hover:bg-white/90 font-semibold py-3 px-8 rounded-lg text-lg transition-all">
+              Register Now
+            </button>
+          </Link>
         </div>
       </section>
 

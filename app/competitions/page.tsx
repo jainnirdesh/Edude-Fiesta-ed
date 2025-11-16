@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { ChevronDown } from 'lucide-react'
@@ -174,9 +175,11 @@ export default function Competitions() {
                   </div>
 
                   {/* Register Button */}
-                  <button className="w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-4 rounded-lg transition-all text-lg mt-6">
-                    Register Team
-                  </button>
+                  <Link href="/registration">
+                    <button className="w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-4 rounded-lg transition-all text-lg mt-6">
+                      Register Team
+                    </button>
+                  </Link>
                 </div>
               )}
             </div>
@@ -216,9 +219,11 @@ export default function Competitions() {
             <h2 className="text-4xl sm:text-5xl font-bold">Ready to Compete?</h2>
             <p className="text-lg text-white/80">Register your team and showcase your talent on the global stage</p>
           </div>
-          <button className="bg-white text-primary hover:bg-white/90 font-semibold py-3 px-8 rounded-lg text-lg transition-all">
-            Register Your Team
-          </button>
+          <Link href="/registration">
+            <button className="bg-white text-primary hover:bg-white/90 font-semibold py-3 px-8 rounded-lg text-lg transition-all">
+              Register Your Team
+            </button>
+          </Link>
         </div>
       </section>
 

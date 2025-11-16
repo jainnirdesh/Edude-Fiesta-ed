@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -12,7 +13,7 @@ export default function Edition2025() {
   const schedule = [
     {
       day: 'Day 1',
-      date: 'March 15, 2025',
+      date: 'February 25, 2026',
       events: [
         { time: '10:00 AM', title: 'Grand Pride March', desc: '10+ international universities & 12 Indian states with 3-minute stop performances' },
         { time: '4:00 PM', title: 'Cultural Mixer Break', desc: 'Informal networking and cultural exchange' },
@@ -21,7 +22,7 @@ export default function Edition2025() {
     },
     {
       day: 'Day 2',
-      date: 'March 16, 2025',
+      date: 'February 26, 2026',
       events: [
         { time: '10:00 AM', title: 'International University Performances', desc: 'Showcasing global talent and traditions' },
         { time: '2:00 PM', title: 'State Cultural Dance & Music', desc: '12 Indian states presenting their cultural heritage' },
@@ -31,7 +32,7 @@ export default function Edition2025() {
     },
     {
       day: 'Day 3',
-      date: 'March 17, 2025',
+      date: 'February 27, 2026',
       events: [
         { time: '10:00 AM', title: 'Mr. & Ms. Freshers Competition', desc: 'Celebrating the campus ambassadors' },
         { time: '1:00 PM', title: 'Inter-University Competitions', desc: 'Dance, music, and art competitions' },
@@ -61,7 +62,7 @@ export default function Edition2025() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
             {[
-              { label: 'Dates', value: 'March 15-17, 2025' },
+              { label: 'Dates', value: 'February 25-27, 2026' },
               { label: 'Venue', value: 'K.R. Mangalam University Campus, Delhi' },
               { label: 'Theme', value: 'Global Culture, One Stage' },
             ].map((item, idx) => (
@@ -79,7 +80,7 @@ export default function Edition2025() {
               <div className="space-y-4">
                 <h2 className="text-5xl font-bold">EDUDE FIESTA 2025</h2>
                 <p className="text-2xl font-semibold">Global Culture, One Stage</p>
-                <p className="text-lg">March 15-17, 2025 | K.R. Mangalam University</p>
+                <p className="text-lg">February 25-27, 2026 | K.R. Mangalam University</p>
               </div>
             </div>
           </div>
@@ -169,9 +170,11 @@ export default function Edition2025() {
               { label: 'Performers', desc: 'Showcase your talent' },
               { label: 'Volunteers', desc: 'Help us organize' },
             ].map((item, idx) => (
-              <Button key={idx} size="lg" className="bg-white text-primary hover:bg-white/90 font-semibold h-12">
-                Register as {item.label}
-              </Button>
+              <Link key={idx} href="/registration">
+                <Button size="lg" className="w-full bg-white text-primary hover:bg-white/90 font-semibold h-12">
+                  Register as {item.label}
+                </Button>
+              </Link>
             ))}
           </div>
         </div>

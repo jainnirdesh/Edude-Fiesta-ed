@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 
@@ -146,9 +147,11 @@ export default function Universities() {
             <h2 className="text-4xl sm:text-5xl font-bold">Your University Next?</h2>
             <p className="text-lg text-white/80">Register your institution to be part of EDUDE FIESTA 2025</p>
           </div>
-          <button className="bg-white text-primary hover:bg-white/90 font-semibold py-3 px-8 rounded-lg text-lg transition-all">
-            Register Your University
-          </button>
+          <Link href="/registration">
+            <button className="bg-white text-primary hover:bg-white/90 font-semibold py-3 px-8 rounded-lg text-lg transition-all">
+              Register Your University
+            </button>
+          </Link>
         </div>
       </section>
 
