@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { Mail, MapPin, Phone } from 'lucide-react'
+import { db } from '@/lib/firebase'
+import { addDoc, collection } from 'firebase/firestore'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -27,17 +29,28 @@ export default function Contact() {
     setIsSubmitting(true)
 
     try {
-      // Simulate API call - replace this with your preferred backend
-      console.log('Form submission:', formData)
-      
-      // For now, just log the data and show success
-      await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate network delay
-      
-      alert('Thank you for reaching out! We will get back to you soon.')
-      setFormData({ firstName: '', lastName: '', email: '', phone: '', message: '' })
+      // Save to Firestore here
+      await addDoc(collection(db, "contactMessages"), {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message,
+        createdAt: new Date(),
+      })
+
+      alert("Thank you for reaching out! We will get back to you soon.")
+
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        message: "",
+      })
     } catch (error) {
-      console.error('Error submitting form:', error)
-      alert('There was an error sending your message. Please try again.')
+      console.error("Firestore error:", error)
+      alert("There was an error sending your message. Please try again.")
     } finally {
       setIsSubmitting(false)
     }
@@ -53,15 +66,16 @@ export default function Contact() {
     setIsSubscribing(true)
 
     try {
-      // Simulate API call
-      console.log('Newsletter subscription:', newsletterEmail)
-      
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // Save newsletter subscription to Firestore
+      await addDoc(collection(db, "newsletterSubscriptions"), {
+        email: newsletterEmail,
+        createdAt: new Date(),
+      })
       
       alert('Thank you for subscribing! You will receive our latest updates.')
       setNewsletterEmail('')
     } catch (error) {
-      console.error('Error subscribing to newsletter:', error)
+      console.error('Firestore error:', error)
       alert('There was an error with your subscription. Please try again.')
     } finally {
       setIsSubscribing(false)
