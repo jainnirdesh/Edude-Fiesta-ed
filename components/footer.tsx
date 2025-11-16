@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Mail, MapPin, Phone, Instagram, Twitter, Facebook, Youtube } from 'lucide-react'
+import { Mail, MapPin, Phone, Instagram, Twitter, Facebook, Youtube, Linkedin } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -77,9 +77,25 @@ export function Footer() {
             <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
             <Link href="#" className="hover:text-white transition-colors">Code of Conduct</Link>
           </div>
-          <p className="text-center text-sm text-white/70">
-            &copy; 2025 EDUDE FIESTA. All rights reserved. K.R. Mangalam University
-          </p>
+          
+          {/* Made by Credit */}
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+            <p className="text-center text-sm text-white/70">
+              &copy; 2025 EDUDE FIESTA. All rights reserved. K.R. Mangalam University
+            </p>
+            <div className="flex items-center gap-2 text-sm text-white/70">
+              <span>Made by</span>
+              <a 
+                href="https://www.linkedin.com/in/nirdeshhjain/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-white hover:text-secondary transition-colors font-semibold"
+              >
+                <Linkedin size={16} />
+                Nirdesh Jain
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </footer>

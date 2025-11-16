@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { Mail, MapPin, Phone } from 'lucide-react'
@@ -126,27 +127,29 @@ export default function Contact() {
               <div className="glass p-8 space-y-6">
                 <h3 className="text-2xl font-bold text-primary">Quick Links</h3>
                 <div className="space-y-3">
-                  <div className="flex items-start gap-3">
-                    <span className="text-secondary font-bold text-xl">→</span>
+                  <Link href="/registration" className="flex items-start gap-3 group hover:bg-white/10 p-3 rounded-lg transition-all duration-300 cursor-pointer">
+                    <span className="text-secondary font-bold text-xl group-hover:scale-110 transition-transform">→</span>
                     <div>
-                      <p className="font-semibold text-foreground">Registration Help</p>
+                      <p className="font-semibold text-foreground group-hover:text-primary transition-colors">Registration Help</p>
                       <p className="text-sm text-foreground/70">Need help registering? Check our FAQ section</p>
                     </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <span className="text-secondary font-bold text-xl">→</span>
+                  </Link>
+                  
+                  <div className="flex items-start gap-3 group hover:bg-white/10 p-3 rounded-lg transition-all duration-300 cursor-pointer" onClick={() => window.open('mailto:edudefiesta@krmu.edu.in?subject=Accommodation Inquiry', '_blank')}>
+                    <span className="text-secondary font-bold text-xl group-hover:scale-110 transition-transform">→</span>
                     <div>
-                      <p className="font-semibold text-foreground">Accommodation</p>
+                      <p className="font-semibold text-foreground group-hover:text-primary transition-colors">Accommodation</p>
                       <p className="text-sm text-foreground/70">Information about campus accommodation</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <span className="text-secondary font-bold text-xl">→</span>
+                  
+                  <Link href="/about" className="flex items-start gap-3 group hover:bg-white/10 p-3 rounded-lg transition-all duration-300 cursor-pointer">
+                    <span className="text-secondary font-bold text-xl group-hover:scale-110 transition-transform">→</span>
                     <div>
-                      <p className="font-semibold text-foreground">Event Guidelines</p>
+                      <p className="font-semibold text-foreground group-hover:text-primary transition-colors">Event Guidelines</p>
                       <p className="text-sm text-foreground/70">Code of conduct and event policies</p>
                     </div>
-                  </div>
+                  </Link>
                 </div>
               </div>
             </div>
